@@ -3,8 +3,8 @@ import { Geolocation } from '@capacitor/geolocation';
 import Map from '@arcgis/core/Map';
 import MapView from '@arcgis/core/views/MapView';
 import Graphic from '@arcgis/core/Graphic';
-import Point from '@arcgis/core/geometry/Point';
-import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
+import Point from '@arcgis/core/geometry/Point'; // Impor Point
+
 
 @Component({
   selector: 'app-home',
@@ -12,52 +12,58 @@ import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-  latitude: number;
-  longitude: number;
+  private latitude: number | any;
+  private longitude: number | any;
 
-  constructor() {
-    this.longitude = 110.377364; // Longitude UGM
-    this.latitude = -7.770639;   // Latitude UGM
-  }
+  constructor() {}
 
   public async ngOnInit() {
+    const position = await Geolocation.getCurrentPosition();
+    this.latitude = position.coords.latitude;
+    this.longitude = position.coords.longitude;
+
     // Buat instance peta
     const map = new Map({
-      basemap: "topo-vector"
+      basemap: "satellite"
     });
 
     const view = new MapView({
       container: "container",
       map: map,
-      zoom: 15,
-      center: [this.longitude, this.latitude]
+      zoom: 16,
+      center: [this.longitude, this.latitude] // Longitude, Latitude
     });
 
-    // Buat marker di lokasi UGM
+    // Gunakan class Point dari ArcGIS API
     const point = new Point({
       longitude: this.longitude,
       latitude: this.latitude
     });
 
-    const markerSymbol = new SimpleMarkerSymbol({
-      color: [226, 119, 40],  // Warna marker
+    const markerSymbol = {
+      type: "simple-marker",
+      style: "circle", // Mengganti bentuk menjadi diamond (bisa juga 'circle', 'square', 'cross', dll.)
+      color: [255, 0, 0], // Warna biru cerah
+      size: "40px", // Ukuran marker
       outline: {
-        color: [255, 255, 255], // Warna outline
-        width: 2
+        color: [255, 255, 0], // Warna kuning pada garis tepi
+        width: 3
+      },
+      shadow: {
+        color: [50, 50, 50, 0.5], // Menambahkan bayangan dengan opasitas
+        offsetX: 3,
+        offsetY: 3,
+        blurRadius: 5
       }
-    });
+    };
+
 
     const pointGraphic = new Graphic({
-      geometry: point,
+      geometry: point,  // Menggunakan class Point sebagai geometri
       symbol: markerSymbol
     });
 
-    // Tambahkan marker ke view
+    // Tambahkan marker ke peta
     view.graphics.add(pointGraphic);
-
-    // Dapatkan posisi saat ini (opsional)
-    const position = await Geolocation.getCurrentPosition();
-    this.latitude = position.coords.latitude;
-    this.longitude = position.coords.longitude;
   }
 }
