@@ -21,12 +21,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               {
-                "glob": "**/*",
+                "glob": "*/",
                 "input": "src/assets",
                 "output": "assets"
               },
               {
-                "glob": "**/*.svg",
+                "glob": "*/.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
               }
@@ -80,7 +80,7 @@
               "buildTarget": "app:build:development"
             },
             "ci": {
-              "progress": false
+              
             }
           },
           "defaultConfiguration": "development"
@@ -101,12 +101,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
+                "glob": "*/",
+                "input": "node_modules/@arcgis/core/assets",
+                "output": "/assets/"
               },
               {
-                "glob": "**/*.svg",
+                "glob": "*/.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
               }
@@ -125,8 +125,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
+              "src/*/.ts",
+              "src/*/.html"
             ]
           }
         }
