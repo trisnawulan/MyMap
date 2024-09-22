@@ -19,10 +19,8 @@ export class HomePage implements OnInit {
   constructor () {}
 
   async ngOnInit() {
-    await this.initializeMap();
-    this.addWeatherPointMarkers();  // Menambahkan semua marker setelah peta diinisialisasi
+    this.initializeMap();
   }
-
 
   async initializeMap() {
     const map = new Map({
@@ -39,6 +37,8 @@ export class HomePage implements OnInit {
     let weatherServiceFL = new ImageryLayer({ url: WeatherServiceURL });
     map.add(weatherServiceFL);
 
+    this.addWeatherPointMarker();
+
     setInterval(this.updateUserLocationOnMap.bind(this), 10000);
   }
 
@@ -48,41 +48,30 @@ export class HomePage implements OnInit {
     }
   }
 
-  addWeatherPointMarkers() {
-    const locations = [
-      { longitude: -94.10610906794427,  latitude: 38.993325156826316  },  // Kansas
-      { longitude: -81.9115348156794, latitude: 36.2531368188833 },  // Los Angeles, California
-      { longitude: -74.0060, latitude: 40.7128 },  // New York City, New York
-      { longitude: -87.6298, latitude: 41.8781 },  // Chicago, Illinois
-      { longitude: -95.3698, latitude: 29.7604 },  // Houston, Texas
-      { longitude: -122.4194, latitude: 37.7749 }  // San Francisco, California
-    ];
-
-    locations.forEach(location => {
-      // Create a point for each location
-      let point = new Point({
-        longitude: location.longitude,
-        latitude: location.latitude
-      });
-
-      // Create a symbol for the point
-      let markerSymbol = new SimpleMarkerSymbol({
-        color: [255, 0, 0], // Red color
-        size: '12px', // Size of the marker
-        outline: {
-          color: [255, 255, 255], // White outline
-          width: 2
-        }
-      });
-
-      // Create a graphic for each point and add it to the mapView
-      let pointGraphic = new Graphic({
-        geometry: point,
-        symbol: markerSymbol
-      });
-
-      this.mapView.graphics.add(pointGraphic);
+  addWeatherPointMarker() {
+    // Create a point in Kansas, USA
+    let point = new Point({
+      longitude: -97.5, // Longitude for Kansas
+      latitude: 39.0   // Latitude for Kansas
     });
+
+    // Create a symbol for the point
+    let markerSymbol = new SimpleMarkerSymbol({
+      color: [255, 0, 0], // Red color
+      size: '12px', // Size of the marker
+      outline: {
+        color: [255, 255, 255], // White outline
+        width: 2
+      }
+    });
+
+    // Create a graphic and add it to the mapView
+    let pointGraphic = new Graphic({
+      geometry: point,
+      symbol: markerSymbol
+    });
+
+    this.mapView.graphics.add(pointGraphic);
   }
 
   async getLocationService(): Promise<number[]> {
